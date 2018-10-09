@@ -7,10 +7,10 @@ In this lab, we'll build a stochastic simulation to model herd immunity in a pop
 
 ## Objectives
 
-In this lab, we will learn how to:
+You will be able to:
 
-* Understanding the OO lifecycle , and the relationship between attributes and methods
-* Creating Object-Oriented data models that describe the real world with classes 
+* Understand the OO lifecycle, and the relationship between attributes and methods
+* Create Object-Oriented data models that describe the real world with classes 
 
 <img src='herd_immunity.gif'>
 
@@ -30,9 +30,9 @@ np.random.seed(0)
 
     C:\Users\medio\AppData\Local\Continuum\anaconda3\lib\site-packages\tqdm\autonotebook\__init__.py:14: TqdmExperimentalWarning: Using `tqdm.autonotebook.tqdm` in notebook mode. Use `tqdm.tqdm` instead to force console mode (e.g. in jupyter console)
       " (e.g. in jupyter console)", TqdmExperimentalWarning)
-    
 
-### The Assumptions of Our Model
+
+## The Assumptions of Our Model
 
 In order to build this stochastic simulation, we'll have to accept some assumptions.  In order to simplify the complexity of the model, we'l assume:
 
@@ -48,7 +48,7 @@ In order to build this stochastic simulation, we'll have to accept some assumpti
 Building simulations is always a trade-off, since the real world is very, very complex.  As we build our simulation, try to think about ways in which we could make our model more realistic by writing it in such a way that it eliminates one of the assumptions above (e.g. generating a float value for vaccine efficacy on a person-by-person level to eliminate our first assumption). 
 
 
-### Building our `Person` class
+## Building our `Person` class
 
 We'll start by building out our `Person` class, which will represent the individuals in our population. 
 
@@ -86,7 +86,7 @@ Great! Since we're using OOP to build this simulation, it makes sense to have ea
 
 Creating our `Simulation` class will be a bit more involved, because this class does all the heavy lifting.  We'll handle this piece by piece, and test that everything is working along the way. 
 
-#### Writing our `__init__` method
+### Writing our `__init__` method
 
 Our init method should take in the following arguments at instantiation time:
 
@@ -469,7 +469,7 @@ sim = Simulation(2000, "Ebola", 2, 0.5, 20, .85, 50)
     Total Number of Immune: 1643
     Current Infected: 50
     Deaths So Far: 0
-    
+
 
 
 ```python
@@ -501,7 +501,7 @@ sim.run()
     Beginning Time Step 18
     Beginning Time Step 19
     
-    
+
 
 
 ```python
@@ -745,7 +745,7 @@ the majority of the unvaccinated people in the population.  Although there were 
 
 Try different values for the `pct_vaccinated` argument, and see how it changes the results of the model.  These would look great as a visualization--consider comparing them all on the same line graph!
 
-# Conclusion
+## Summary
 
 Great job! You've just written a simulation to demonstrate the effects of herd immunity in action. 
 
