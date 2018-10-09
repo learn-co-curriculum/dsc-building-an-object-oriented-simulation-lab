@@ -7,10 +7,10 @@ In this lab, we'll build a stochastic simulation to model herd immunity in a pop
 
 ## Objectives
 
-In this lab, we will learn how to:
+You will be able to:
 
-* Understanding the OO lifecycle , and the relationship between attributes and methods
-* Creating Object-Oriented data models that describe the real world with classes 
+* Understand the OO lifecycle, and the relationship between attributes and methods
+* Create Object-Oriented data models that describe the real world with classes 
 
 <img src='herd_immunity.gif'>
 
@@ -28,7 +28,7 @@ from tqdm.autonotebook import tqdm
 np.random.seed(0)
 ```
 
-### The Assumptions of Our Model
+## The Assumptions of Our Model
 
 In order to build this stochastic simulation, we'll have to accept some assumptions.  In order to simplify the complexity of the model, we'l assume:
 
@@ -77,7 +77,7 @@ Great! Since we're using OOP to build this simulation, it makes sense to have ea
 
 Creating our `Simulation` class will be a bit more involved, because this class does all the heavy lifting.  We'll handle this piece by piece, and test that everything is working along the way. 
 
-#### Writing our `__init__` method
+### Writing our `__init__` method
 
 Our init method should take in the following arguments at instantiation time:
 
@@ -468,7 +468,7 @@ the majority of the unvaccinated people in the population.  Although there were 
 
 Try different values for the `pct_vaccinated` argument, and see how it changes the results of the model.  These would look great as a visualization--consider comparing them all on the same line graph!
 
-# Conclusion
+## Summary
 
 Great job! You've just written a simulation to demonstrate the effects of herd immunity in action. 
 
