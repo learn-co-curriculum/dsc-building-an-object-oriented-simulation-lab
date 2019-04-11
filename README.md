@@ -141,7 +141,7 @@ class Simulation(object):
             # num_initial_infected parameter.  If not, set new_person to be infected
             if self.current_infected_counter != num_initial_infected:
                 new_person.is_infected = True
-                # dont forget to increment both infected counters!
+                # don't forget to increment both infected counters!
                 self.total_infected_counter += 1
                 self.current_infected_counter += 1
             # if new_person is not infected, determine if they are vaccinated or not by using their `get_vaccinated` method
@@ -242,7 +242,7 @@ def infected_interaction(self, infected_person):
                 # If random_number is greater than or equal to (1 - self.r0), set random person as newly_infected
                 if random_number >= (1 - self.r0):
                     random_person.newly_infected = True
-            # Dont forget to increment num_interactions, and make sure it's at this level of indentation
+            # Don't forget to increment num_interactions, and make sure it's at this level of indentation
             num_interactions += 1
 
 # Adds this function to our Simulation class
