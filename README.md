@@ -34,7 +34,7 @@ In order to build this stochastic simulation, you'll have to accept some assumpt
 
 * Vaccines are 100% effective.
 * Infected individuals that recover from the disease are now immune to catching the disease a second time (think Chickenpox)
-* Dead invidiuals are not contagious. 
+* Dead indiviuals are not contagious. 
 * All infections happen from person-to-person interaction
 * All individuals interact with the same amount of people each day
 * The `r0` value (pronounced _"R-nought"_) is a statistic from the Centers for Disease Control that estimates the average number of people an infected person will infect before they are no longer contagious.  For this value, we assume:
@@ -132,7 +132,7 @@ class Simulation(object):
             # num_initial_infected parameter.  If not, set new_person to be infected
             if self.current_infected_counter != None:
                 new_person.is_infected = None
-                # dont forget to increment both infected counters!
+                # don't forget to increment both infected counters!
                 self.total_infected_counter += None
                 self.current_infected_counter += None
             # if new_person is not infected, determine if they are vaccinated or not by using their `get_vaccinated` method
@@ -207,8 +207,8 @@ Write a function called `infected_interaction` that will be called for every inf
 
 * Initialize a counter called `num_interactions` to `0`.
 * Select a random person from `self.population`.
-* Check is the person is alive. If the person is dead, we will not count this as an interaction.
-* If the random person is alive and not vaccinated, generate a a random number between 0 and 1.  If the random number is greater than `(1 - self.r0)`, change the random person's `newly_infected` attribute to `True`.
+* Check if the person is alive. If the person is dead, we will not count this as an interaction.
+* If the random person is alive and not vaccinated, generate a random number between 0 and 1.  If the random number is greater than `(1 - self.r0)`, change the random person's `newly_infected` attribute to `True`.
 * Increment `num_interactions` by 1.  Do not increment any of the infected counters in the simulation class--you'll have another method deal with those.
 
 Complete the `infected_interaction()` method in the cell below.  Comments have been provided to help you write it.
@@ -233,7 +233,7 @@ def infected_interaction(self, infected_person):
                 # If random_number is greater than or equal to (1 - self.r0), set random person as newly_infected
                 if None >= None:
                     random_person.newly_infected = None
-            # Dont forget to increment num_interactions, and make sure it's at this level of indentation
+            # Don't forget to increment num_interactions, and make sure it's at this level of indentation
             num_interactions += None
 
 # Adds this function to our Simulation class
@@ -247,7 +247,7 @@ The 2nd helper function you'll use during each time step is one that resolves an
 This function will:
 
 * Iterate through every person in the population.
-* Check if the person is alive (since we dont need to bother checking anything for the dead ones)
+* Check if the person is alive (since we don't need to bother checking anything for the dead ones)
 * If the person is infected, we need to resolve whether they survive the infection or die from it.  
     * Generate a random number between 0 and 1.  
     * If this number is greater than `(1 - self.mortality_rate)`, the person has died.  
@@ -401,7 +401,7 @@ This function should:
 * Start a for loop that runs `self.total_time_steps` number of times.  In order to demonstrate how to easily add a progress bar to iterables with the `tqdm` library, this line has been added for you. 
 * Display a message telling the user the time step that it is currently working on. 
 * Call `self._time_step()`
-* Once the simuluation has finished, write the DataFrame containing the summary statistics from each step to a csv file.  This line of code has also been provided for you. 
+* Once the simulation has finished, write the DataFrame containing the summary statistics from each step to a csv file.  This line of code has also been provided for you. 
 
 In the cell below, complete the `run()` function.  Comments have been added to help you write it. 
 
@@ -471,7 +471,7 @@ Try different values for the `pct_vaccinated` argument, and see how it changes t
 
 Great job! You've just written a simulation to demonstrate the effects of herd immunity in action. 
 
-In this lab, we demonstated mastery of:
+In this lab, you demonstrated mastery of:
 
 * Understanding the OO lifecycle , and the relationship between attributes and methods
 * Creating Object-Oriented data models that describe the real world with classes
