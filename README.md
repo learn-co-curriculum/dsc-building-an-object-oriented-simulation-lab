@@ -28,6 +28,19 @@ from tqdm.autonotebook import tqdm
 np.random.seed(0)
 ```
 
+
+```python
+# __SOLUTION__ 
+import numpy as np
+import pandas as pd
+from tqdm.autonotebook import tqdm
+np.random.seed(0)
+```
+
+    C:\Users\medio\AppData\Local\Continuum\anaconda3\lib\site-packages\tqdm\autonotebook\__init__.py:14: TqdmExperimentalWarning: Using `tqdm.autonotebook.tqdm` in notebook mode. Use `tqdm.tqdm` instead to force console mode (e.g. in jupyter console)
+      " (e.g. in jupyter console)", TqdmExperimentalWarning)
+
+
 ## The Assumptions of Our Model
 
 In order to build this stochastic simulation, you'll have to accept some assumptions.  In order to simplify the complexity of the model, assume:
@@ -69,6 +82,23 @@ class Person(object):
         
     def get_vaccinated(self, pct_vaccinated):
         pass
+```
+
+
+```python
+# __SOLUTION__ 
+class Person(object):
+    
+    def __init__(self):
+        self.is_alive = True
+        self.is_infected = False
+        self.has_been_infected = False
+        self.newly_infected = False
+        self.is_vaccinated = False
+        
+    def get_vaccinated(self, pct_vaccinated):
+        if (1 - pct_vaccinated) < np.random.random():
+            self.is_vaccinated = True
 ```
 
 Great! Since you're using OOP to build this simulation, it makes sense to have each individual `Person` instance take care of certain details, such as determining if they are vaccinated or not.  The `pct_vaccinated` argument is a value you'll pass into the `Simulation` class, which you can then pass along to each `Person` once our population is created to vaccinate the right amount of people.  
@@ -182,6 +212,83 @@ class Simulation(object):
         print("Deaths So Far: {}".format(num_dead))     
 ```
 
+
+```python
+# __SOLUTION__ 
+class Simulation(object):
+    
+    def __init__(self, population_size, disease_name, r0, mortality_rate,  total_time_steps, pct_vaccinated, num_initial_infected):
+        self.r0 = r0 / 100.
+        self.disease_name = disease_name
+        self.mortality_rate = mortality_rate
+        self.total_time_steps = total_time_steps
+        self.current_time_step = 0
+        self.total_infected_counter = 0
+        self.current_infected_counter = 0
+        self.dead_counter = 0
+        self.population = []
+        # This attribute is used in a function that is provided for you in order to log statistics from each time_step.  
+        # Don't touch it!
+        self.time_step_statistics_df = pd.DataFrame()
+        
+        # Create a for loop the size of the population we want in this simulation
+        for i in range(population_size):
+            # Create new person
+            new_person = Person()
+            # We'll add infected persons to our simulation first.  Check if the current number of infected are equal to the 
+            # num_initial_infected parameter.  If not, set new_person to be infected
+            if self.current_infected_counter != num_initial_infected:
+                new_person.is_infected = True
+                # don't forget to increment both infected counters!
+                self.total_infected_counter += 1
+                self.current_infected_counter += 1
+            # if new_person is not infected, determine if they are vaccinated or not by using their `get_vaccinated` method
+            # Then, append new_person to self.population
+            else:
+                new_person.get_vaccinated(pct_vaccinated)
+            self.population.append(new_person)
+       
+        print("-" * 50)
+        print("Simulation Initiated!")
+        print("-" * 50)
+        self._get_sim_statistics()
+        
+        
+    
+    def _get_sim_statistics(self):
+    # In the interest of time, this method has been provided for you.  No extra code needed.
+        num_infected = 0
+        num_dead = 0
+        num_vaccinated = 0
+        num_immune = 0
+        for i in self.population:
+            if i.is_infected:
+                num_infected += 1
+            if not i.is_alive:
+                num_dead += 1
+            if i.is_vaccinated:
+                num_vaccinated += 1
+                num_immune += 1
+            if i.has_been_infected:
+                num_immune += 1
+        assert num_infected == self.current_infected_counter
+        assert num_dead == self.dead_counter
+        
+        
+        print("")
+        print("Summary Statistics for Time Step {}".format(self.current_time_step))
+        print("")
+        print("-" * 50)
+        print("Disease Name: {}".format(self.disease_name))
+        print("R0: {}".format(self.r0 * 100))
+        print("Mortality Rate: {}%".format(self.mortality_rate * 100))
+        print("Total Population Size: {}".format(len(self.population)))
+        print("Total Number of Vaccinated People: {}".format(num_vaccinated))
+        print("Total Number of Immune: {}".format(num_immune))
+        print("Current Infected: {}".format(num_infected))
+        print("Deaths So Far: {}".format(num_dead))     
+```
+
 Great! You've now created a basic `Simulation` object that is capable of instantiating itself according to your specifications.  However, your simulation doesn't currently do anything.  Now, add the appropriate behaviors to our simulation. 
 
 ### Building Our Simulation's Behavior
@@ -235,6 +342,32 @@ def infected_interaction(self, infected_person):
                     random_person.newly_infected = None
             # Don't forget to increment num_interactions, and make sure it's at this level of indentation
             num_interactions += None
+
+# Adds this function to our Simulation class
+Simulation.infected_interaction = infected_interaction
+```
+
+
+```python
+# __SOLUTION__ 
+def infected_interaction(self, infected_person):
+    num_interactions = 0
+    while num_interactions < 100:
+        # Randomly select a person from self.population
+        random_person = np.random.choice(self.population)
+        # This only counts as an interaction if the random person selected is alive.  If the person is dead, we do nothing, 
+        # and the counter doesn't increment, repeating the loop and selecting a new person at random.
+        # check if the person is alive.
+        if random_person.is_alive:
+            # CASE: Random person is not vaccinated, and has not been infected before, making them vulnerable to infection
+            if random_person.is_vaccinated == False and random_person.has_been_infected == False:
+                # Generate a random number between 0 and 1
+                random_number = np.random.random()
+                # If random_number is greater than or equal to (1 - self.r0), set random person as newly_infected
+                if random_number >= (1 - self.r0):
+                    random_person.newly_infected = True
+            # Don't forget to increment num_interactions, and make sure it's at this level of indentation
+            num_interactions += 1
 
 # Adds this function to our Simulation class
 Simulation.infected_interaction = infected_interaction
@@ -317,6 +450,58 @@ def _resolve_states(self):
 Simulation._resolve_states = _resolve_states
 ```
 
+
+```python
+# __SOLUTION__ 
+def _resolve_states(self):
+    """
+    Every person in the simulation falls into 1 of 4 states at any given time:
+    1. Dead 
+    2. Alive and not infected
+    3. Currently infected
+    4. Newly Infected
+    
+    States 1 and 2 need no resolving, but State 3 will resolve by either dying or surviving the disease, and State 4 will resolve
+    by turning from newly infected to currently infected.
+    
+    This method will be called at the end of each time step.  All states must be resolved before the next time step can begin.
+    """
+    # Iterate through each person in the population
+    for person in self.population:
+        # We only need to worry about the people that are still alive
+        if person.is_alive: 
+            # CASE: Person was infected this round.  We need to stochastically determine if they die or recover from the disease
+            # Check if person is_infected
+            if person.is_infected:
+                # Generate a random number
+                random_number = np.random.random()
+                # If random_number is >= (1 - self.mortality_rate), set the person to dead and increment the simulation's death
+                # counter
+                if random_number >= (1 - self.mortality_rate):
+                    # Set is_alive and in_infected both to False
+                    person.is_alive = False
+                    person.is_infected = False
+                    # Don't forget to increment self.dead_counter, and decrement self.current_infected_counter
+                    self.dead_counter += 1
+                    self.current_infected_counter -= 1
+                else:
+                    # CASE: They survive the disease and recover.  Set is_infected to False and has_been_infected to True
+                    person.is_infected = False
+                    person.has_been_infected = True
+                    # Don't forget to decrement self.current_infected_counter!
+                    self.current_infected_counter -= 1
+            # CASE: Person was newly infected during this round, and needs to be set to infected before the start of next round
+            elif person.newly_infected:
+                # Set is_infected to True, newly_infected to False, and increment both self.current_infected_counter and 
+                # self.total_infected_counter
+                person.is_infected = True
+                person.newly_infected = False
+                self.current_infected_counter += 1
+                self.total_infected_counter += 1    
+                
+Simulation._resolve_states = _resolve_states
+```
+
 #### `_time_step()` Function
 
 Now that you have two helper methods to most of the heavy lifting, the `_time_step()` function will be pretty simple.  
@@ -359,12 +544,73 @@ def _time_step(self):
 Simulation._time_step = _time_step
 ```
 
+
+```python
+# __SOLUTION__ 
+def _time_step(self):
+    """
+    Compute 1 time step of the simulation. This function will make use of the helper methods we've created above. 
+    
+    The steps for a given time step are:
+    1.  Iterate through each person in self.population.
+        - For each infected person, call infected_interaction() and pass in that person.
+    2.  Use _resolve_states() to resolve all states for the newly infected and the currently infected.
+    3. Increment self.current_time_step by 1. 
+    """
+    # Iterate through each person in the population
+    for person in self.population:
+        # Check only for people that are alive and infected
+        if person.is_alive and person.is_infected:
+            # Call self.infecteed_interaction() and pass in this infected person
+            self.infected_interaction(person)
+    
+    # Once we've made it through the entire population, call self._resolve_states()
+    self._resolve_states()
+    
+    # Now, we're almost done with this time step.  Log summary statistics, and then increment self.current_time_step by 1.
+    self._log_time_step_statistics()
+    self.current_time_step += 1
+
+# Adds this function to our Simulation class
+Simulation._time_step = _time_step
+```
+
 Finally, you just need to write a function that logs the results of each time step by storing it in a DataFrame, and then writes the end result of the Simulation to a csv file.
 
 In the interest of time, this function has been provided for you.  You do not need to write any code in the cell below--just run the cell.
 
 
 ```python
+def _log_time_step_statistics(self, write_to_file=False):
+    # This function has been provided for you, you do not need to write any code for it.
+    # Gets the current number of dead,
+    # CASE: Round 0 of simulation, need to create and Structure DataFrame
+#     if self.time_step_statistics_df == None:
+#         import pandas as pd
+#         self.time_step_statistics_df = pd.DataFrame()
+# #         col_names = ['Time Step', 'Currently Infected', "Total Infected So Far" "Alive", "Dead"]
+# #         self.time_step_statistics_df.columns = col_names
+#     # CASE: Any other round
+#     else:
+        # Compute summary statistics for currently infected, alive, and dead, and append them to time_step_snapshots_df
+    row = {
+        "Time Step": self.current_time_step,
+        "Currently Infected": self.current_infected_counter,
+        "Total Infected So Far": self.total_infected_counter,
+        "Alive": len(self.population) - self.dead_counter,
+        "Dead": self.dead_counter
+    }
+    self.time_step_statistics_df = self.time_step_statistics_df.append(row, ignore_index=True)
+    
+    if write_to_file:
+        self.time_step_statistics_df.to_csv("simulation.csv", mode='w+')
+        
+Simulation._log_time_step_statistics = _log_time_step_statistics
+```
+
+
+```python
+# __SOLUTION__ 
 def _log_time_step_statistics(self, write_to_file=False):
     # This function has been provided for you, you do not need to write any code for it.
     # Gets the current number of dead,
@@ -426,6 +672,28 @@ def run(self):
 Simulation.run = run
 ```
 
+
+```python
+# __SOLUTION__ 
+def run(self):
+    """
+    The main function of the simulation.  This will run the simulation starting at time step 0, calculating
+    and logging the results of each time step until the final time_step is reached. 
+    """
+    
+    for _ in tqdm(range(self.total_time_steps)):
+        # Print out the current time step 
+        print("Beginning Time Step {}".format(self.current_time_step))
+        # Call our `_time_step()` function
+        self._time_step()
+    
+    # Simulation is over--log results to a file by calling _log_time_step_statistics(write_to_file=True)
+    self._log_time_step_statistics(write_to_file=True)
+
+# Adds the run() function to our Simulation class.
+Simulation.run = run
+```
+
 ### Running Our Simulation
 
 Now comes the fun part--actually running your simulation!
@@ -456,6 +724,294 @@ sim = None
 results = pd.read_csv('simulation.csv')
 results
 ```
+
+
+```python
+# __SOLUTION__ 
+sim = Simulation(2000, "Ebola", 2, 0.5, 20, .85, 50)
+```
+
+    --------------------------------------------------
+    Simulation Initiated!
+    --------------------------------------------------
+    
+    Summary Statistics for Time Step 0
+    
+    --------------------------------------------------
+    Disease Name: Ebola
+    R0: 2.0
+    Mortality Rate: 50.0%
+    Total Population Size: 2000
+    Total Number of Vaccinated People: 1643
+    Total Number of Immune: 1643
+    Current Infected: 50
+    Deaths So Far: 0
+
+
+
+```python
+# __SOLUTION__ 
+sim.run()
+```
+
+
+    HBox(children=(IntProgress(value=0, max=20), HTML(value='')))
+
+
+    Beginning Time Step 0
+    Beginning Time Step 1
+    Beginning Time Step 2
+    Beginning Time Step 3
+    Beginning Time Step 4
+    Beginning Time Step 5
+    Beginning Time Step 6
+    Beginning Time Step 7
+    Beginning Time Step 8
+    Beginning Time Step 9
+    Beginning Time Step 10
+    Beginning Time Step 11
+    Beginning Time Step 12
+    Beginning Time Step 13
+    Beginning Time Step 14
+    Beginning Time Step 15
+    Beginning Time Step 16
+    Beginning Time Step 17
+    Beginning Time Step 18
+    Beginning Time Step 19
+    
+
+
+
+```python
+# __SOLUTION__ 
+results = pd.read_csv('simulation.csv')
+results
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>Alive</th>
+      <th>Currently Infected</th>
+      <th>Dead</th>
+      <th>Time Step</th>
+      <th>Total Infected So Far</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>1971.0</td>
+      <td>10.0</td>
+      <td>29.0</td>
+      <td>0.0</td>
+      <td>60.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1967.0</td>
+      <td>5.0</td>
+      <td>33.0</td>
+      <td>1.0</td>
+      <td>65.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>1964.0</td>
+      <td>2.0</td>
+      <td>36.0</td>
+      <td>2.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>3.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>4.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>5.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>6.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>7</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>7.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>8</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>8.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>9.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>10</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>10.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>11</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>11.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>12</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>12.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>13</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>13.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>14</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>14.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>15</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>15.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>16</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>16.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>17</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>17.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>18</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>18.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>19</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>19.0</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>20</td>
+      <td>1964.0</td>
+      <td>0.0</td>
+      <td>36.0</td>
+      <td>20.0</td>
+      <td>67.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 If you didn't change the random seed, your results should look like this:
 
