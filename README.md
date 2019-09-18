@@ -3,7 +3,7 @@
 
 ## Introduction
 
-In this lab, you'll build a stochastic simulation to model herd immunity in a population, and examine how a virus moves through a population, depending on what percentage of the population is vaccinated against the disease. 
+In this lab, you'll build a stochastic simulation to model herd immunity in a population and examine how a virus moves through a population, depending on what percentage of the population is vaccinated against the disease. 
 
 ## Objectives
 
@@ -34,14 +34,14 @@ In order to build this stochastic simulation, you'll have to accept some assumpt
 
 * Vaccines are 100% effective.
 * Infected individuals that recover from the disease are now immune to catching the disease a second time (think Chickenpox)
-* Dead indiviuals are not contagious. 
+* Dead individuals are not contagious. 
 * All infections happen from person-to-person interaction
 * All individuals interact with the same amount of people each day
 * The `r0` value (pronounced _"R-nought"_) is a statistic from the Centers for Disease Control that estimates the average number of people an infected person will infect before they are no longer contagious.  For this value, we assume:
     * That this number is out of 100 people
     * That this statistic is accurate
     
-Building simulations is always a trade-off, since the real world is very, very complex.  As you build the simulation, try to think about ways in which you could make our model more realistic by writing it in such a way that it eliminates one of the assumptions above (e.g. generating a float value for vaccine efficacy on a person-by-person level to eliminate our first assumption). 
+Building simulations is always a trade-off since the real world is very, very complex.  As you build the simulation, try to think about ways in which you could make our model more realistic by writing it in such a way that it eliminates one of the assumptions above (e.g. generating a float value for vaccine efficacy on a person-by-person level to eliminate our first assumption). 
 
 
 ### Building our `Person` class
@@ -75,7 +75,7 @@ Great! Since you're using OOP to build this simulation, it makes sense to have e
 
 ## Creating our `Simulation` Class
 
-Creating our `Simulation` class will be a bit more involved, because this class does all the heavy lifting.  You'll handle this piece by piece, and test that everything is working along the way. 
+Creating our `Simulation` class will be a bit more involved because this class does all the heavy lifting.  You'll handle this piece by piece, and test that everything is working along the way. 
 
 ### Writing our `__init__` method
 
@@ -193,7 +193,7 @@ For any given time step, your simulation should complete the following steps in 
         1B. Select another random person from the population. 
         2B. If this person is alive, not infected, unvaccinated, and hasn't been infected before: 
             1C. Generate a random number between 0 and 1.  If this random number is greater than `(1 - self.r0)`, then mark this new person as newly infected
-        3B.If the person is vaccinated, currently infected, or has been infected in a previous round of the simulation, do nothing. 
+        3B. If the person is vaccinated, currently infected, or has been infected in a previous round of the simulation, do nothing. 
     2A. Repeat the step above until the infected person has interacted with 100 random living people from the population. 
 2. Once every infected person has interacted with 100 random living people, resolve all current illnesses and new infections
     2A. For each person that started this round as infected, generate a random number between 0 and 1.  If that number is greater than `(1 - mortality rate)`, then that person has been killed by the disease.  They should be marked as dead.  Otherwise, they stay alive, and can longer catch the disease.
@@ -319,7 +319,7 @@ Simulation._resolve_states = _resolve_states
 
 #### `_time_step()` Function
 
-Now that you have two helper methods to most of the heavy lifting, the `_time_step()` function will be pretty simple.  
+Now that you have two helper methods to do most of the heavy lifting, the `_time_step()` function will be pretty simple.  
 
 This function should:
 
