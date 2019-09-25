@@ -32,7 +32,7 @@ np.random.seed(0)
 ```python
 # __SOLUTION__ 
 import numpy as np
-import pandas as pd
+import pandas as pd 
 from tqdm.autonotebook import tqdm
 np.random.seed(0)
 ```
