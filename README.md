@@ -23,7 +23,7 @@ Run the cell below to do this now.
 
 ```python
 import numpy as np
-import pandas as pd
+import pandas as pd 
 from tqdm.autonotebook import tqdm
 np.random.seed(0)
 ```
