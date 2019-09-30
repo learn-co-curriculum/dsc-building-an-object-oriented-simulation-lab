@@ -9,8 +9,8 @@ In this lab, you'll build a stochastic simulation to model herd immunity in a po
 
 You will be able to:
 
-* Understand the OO lifecycle, and the relationship between attributes and methods
-* Create Object-Oriented data models that describe the real world with classes 
+- Understand the OO lifecycle, and the relationship between attributes and methods
+- Create Object-Oriented data models that describe the real world with classes 
 
 <img src='images/herd_immunity.gif'>
 
