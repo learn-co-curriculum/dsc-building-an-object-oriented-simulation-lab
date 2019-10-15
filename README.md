@@ -9,8 +9,9 @@ In this lab, you'll build a stochastic simulation to model herd immunity in a po
 
 You will be able to:
 
-- Understand the OO lifecycle, and the relationship between attributes and methods
-- Create Object-Oriented data models that describe the real world with classes 
+* Use inheritance to write nonredundant code
+* Create methods that calculate statistics of the attributes of an object
+* Create Object-Oriented data models that describe the real world with multiple classes and subclasses and interaction between classes
 
 <img src='images/herd_immunity.gif'>
 
@@ -469,9 +470,4 @@ Try different values for the `pct_vaccinated` argument, and see how it changes t
 
 ## Summary
 
-Great job! You've just written a simulation to demonstrate the effects of herd immunity in action. 
-
-In this lab, you demonstrated mastery of:
-
-* Understanding the OO lifecycle , and the relationship between attributes and methods
-* Creating Object-Oriented data models that describe the real world with classes
+Great job! You've just written a simulation to demonstrate the effects of herd immunity in action. Specifically, in this lab, you demonstrated mastery of using inheritance to write nonredundant code, creating methods that calculate statistics of the attributes of an object, and creating Object-Oriented data models that describe the real world with multiple classes and subclasses and interaction between classes!
