@@ -296,16 +296,25 @@ Great! You've now created a basic `Simulation` object that is capable of instant
 
 For any given time step, your simulation should complete the following steps in order:
 
-1. Loop through each living person in the population
-    1A. If the person is currently infected:
-        1B. Select another random person from the population. 
-        2B. If this person is alive, not infected, unvaccinated, and hasn't been infected before: 
-            1C. Generate a random number between 0 and 1.  If this random number is greater than `(1 - self.r0)`, then mark this new person as newly infected
-        3B. If the person is vaccinated, currently infected, or has been infected in a previous round of the simulation, do nothing. 
-    2A. Repeat the step above until the infected person has interacted with 100 random living people from the population. 
-2. Once every infected person has interacted with 100 random living people, resolve all current illnesses and new infections
-    2A. For each person that started this round as infected, generate a random number between 0 and 1.  If that number is greater than `(1 - mortality rate)`, then that person has been killed by the disease.  They should be marked as dead.  Otherwise, they stay alive, and can longer catch the disease.
-    2B.  All people that were infected this round move from `newly_infected` to `is_infected`. 
+* Loop through each living person in the population
+
+    * If the person is currently infected:
+    
+        * Select another random person from the population. 
+        
+        * If this person is alive, not infected, unvaccinated, and hasn't been infected before: 
+        
+            * Generate a random number between 0 and 1.  If this random number is greater than `(1 - self.r0)`, then mark this new person as newly infected
+            
+        * If the person is vaccinated, currently infected, or has been infected in a previous round of the simulation, do nothing. 
+        
+    * Repeat the step above until the infected person has interacted with 100 random living people from the population. 
+    
+* Once every infected person has interacted with 100 random living people, resolve all current illnesses and new infections
+
+    * For each person that started this round as infected, generate a random number between 0 and 1.  If that number is greater than `(1 - mortality rate)`, then that person has been killed by the disease.  They should be marked as dead.  Otherwise, they stay alive, and can longer catch the disease.
+    
+    * All people that were infected this round move from `newly_infected` to `is_infected`. 
     
 Begin by breaking up most of this logic into helper functions, so that your main functions will be simple.  
     
