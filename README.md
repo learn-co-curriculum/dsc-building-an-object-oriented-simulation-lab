@@ -11,13 +11,13 @@ You will be able to:
 
 * Use inheritance to write nonredundant code
 * Create methods that calculate statistics of the attributes of an object
-* Create Object-Oriented data models that describe the real world with multiple classes and subclasses and interaction between classes
+* Create object-oriented data models that describe the real world with multiple classes and subclasses and interaction between classes
 
 <img src='images/herd_immunity.gif'>
 
 In the previous lesson, you saw some of the various steps you'll now take to create this simulation.
 
-Since you'll be building a stochastic simulation that makes use of randomness, start by importing numpy and setting a random seed for reproducibility.
+Since you'll be building a stochastic simulation that makes use of randomness, start by importing `numpy` and setting a random seed for reproducibility.
 
 Run the cell below to do this now. 
 
@@ -44,33 +44,33 @@ np.random.seed(0)
 
 ## The Assumptions of Our Model
 
-In order to build this stochastic simulation, you'll have to accept some assumptions.  In order to simplify the complexity of the model, assume:
+In order to build this stochastic simulation, you'll have to make some assumptions. In order to simplify the complexity of the model, assume:
 
-* Vaccines are 100% effective.
-* Infected individuals that recover from the disease are now immune to catching the disease a second time (think Chickenpox)
-* Dead individuals are not contagious. 
+* Vaccines are 100% effective 
+* Infected individuals that recover from the disease are now immune to catching the disease a second time (think chickenpox)
+* Dead individuals are not contagious  
 * All infections happen from person-to-person interaction
 * All individuals interact with the same amount of people each day
 * The `r0` value (pronounced _"R-nought"_) is a statistic from the Centers for Disease Control that estimates the average number of people an infected person will infect before they are no longer contagious.  For this value, we assume:
-    * That this number is out of 100 people
-    * That this statistic is accurate
+    * that this number is out of 100 people
+    * that this statistic is accurate
     
 Building simulations is always a trade-off since the real world is very, very complex.  As you build the simulation, try to think about ways in which you could make our model more realistic by writing it in such a way that it eliminates one of the assumptions above (e.g. generating a float value for vaccine efficacy on a person-by-person level to eliminate our first assumption). 
 
 
-### Building our `Person` class
+## Building our `Person()` class
 
-Start by building out our `Person` class, which will represent the individuals in the population. 
+Start by building out our `Person()` class, which will represent the individuals in the population. 
 
-The `Person` class should have the following attributes:
+The `Person()` class should have the following attributes:
 
 * `is_alive = True` 
-* `is_vaccinated`, a boolean value which will be determined by generating a random value between 0 and 1.  Then compare this to `(1 - pct_vaccinated)`, a variable that should be passed in at instantiation time.  If the random number is greater, then this attribute should be `True`-- otherwise, `False`
+* `is_vaccinated`, a boolean value which will be determined by generating a random value between 0 and 1.  Then compare this to `(1 - pct_vaccinated)`, a variable that should be passed in at instantiation time.  If the random number is greater, then this attribute should be `True` -- otherwise, `False`
 * `is_infected = False`
 * `has_been_infected = False`
 * `newly_infected = False`
 
-In the cell below, complete the `Person` class.
+In the cell below, complete the `Person()` class.
 
 **_NOTE:_** To generate a random number between 0 and 1, use `np.random.random()`. 
 
@@ -102,11 +102,11 @@ class Person(object):
             self.is_vaccinated = True
 ```
 
-Great! Since you're using OOP to build this simulation, it makes sense to have each individual `Person` instance take care of certain details, such as determining if they are vaccinated or not.  The `pct_vaccinated` argument is a value you'll pass into the `Simulation` class, which you can then pass along to each `Person` once our population is created to vaccinate the right amount of people.  
+Great! Since you're using OOP to build this simulation, it makes sense to have each individual `Person` instance take care of certain details, such as determining if they are vaccinated or not.  The `pct_vaccinated` argument is a value you'll pass into the `Simulation()` class, which you can then pass along to each `Person()` once our population is created to vaccinate the right amount of people.  
 
-## Creating our `Simulation` Class
+## Creating our `Simulation()` class
 
-Creating our `Simulation` class will be a bit more involved because this class does all the heavy lifting.  You'll handle this piece by piece, and test that everything is working along the way. 
+Creating our `Simulation()` class will be a bit more involved because this class does all the heavy lifting.  You'll handle this piece by piece, and test that everything is working along the way. 
 
 ### Writing our `__init__` method
 
@@ -127,12 +127,11 @@ The attributes `self.disease_name`, `self.mortality_rate`, and `self.total_time_
 
 The attribute `self.r0` should be set to set to `r0 / 100` to convert the number to a decimal between 0 and 1.
 
-Also create attributes for keeping track of what time step the simulation is on, as well as both the current number of infected during this time step and the total number of people that have been infected at any time during the simulation.  For these, set `self.current_time_step`, `self._total_infected_counter`, and `self.current_infected_counter` to  `0`.
+Also create attributes for keeping track of what time step the simulation is on, as well as both the current number of infected during this time step and the total number of people that have been infected at any time during the simulation.  For these, set `self.current_time_step`, `self._total_infected_counter`, and `self.current_infected_counter` to  0.
 
 You'll also need to create an array to hold all of the `Person` objects in our simulation.  Set `self.population` equal to an empty list.  
 
-
-Now comes the fun part--creating the population, and determining if they are healthy, vaccinated, or infected.  
+Now comes the fun part -- creating the population, and determining if they are healthy, vaccinated, or infected.  
 
 Follow the instructions inside the `__init__` method to write the logic that will set up our `Simulation` correctly. 
 
@@ -290,7 +289,7 @@ class Simulation(object):
         print("Deaths So Far: {}".format(num_dead))     
 ```
 
-Great! You've now created a basic `Simulation` object that is capable of instantiating itself according to your specifications.  However, your simulation doesn't currently do anything.  Now, add the appropriate behaviors to our simulation. 
+Great! You've now created a basic `Simulation()` class that is capable of instantiating itself according to your specifications. However, your simulation doesn't currently do anything.  Now, add the appropriate behaviors to the simulation. 
 
 ### Building Our Simulation's Behavior
 
@@ -300,37 +299,37 @@ For any given time step, your simulation should complete the following steps in 
 
     * If the person is currently infected:
     
-        * Select another random person from the population. 
+        * Select another random person from the population  
         
         * If this person is alive, not infected, unvaccinated, and hasn't been infected before: 
         
             * Generate a random number between 0 and 1.  If this random number is greater than `(1 - self.r0)`, then mark this new person as newly infected
             
-        * If the person is vaccinated, currently infected, or has been infected in a previous round of the simulation, do nothing. 
+        * If the person is vaccinated, currently infected, or has been infected in a previous round of the simulation, do nothing  
         
-    * Repeat the step above until the infected person has interacted with 100 random living people from the population. 
+    * Repeat the step above until the infected person has interacted with 100 random living people from the population  
     
 * Once every infected person has interacted with 100 random living people, resolve all current illnesses and new infections
 
-    * For each person that started this round as infected, generate a random number between 0 and 1.  If that number is greater than `(1 - mortality rate)`, then that person has been killed by the disease.  They should be marked as dead.  Otherwise, they stay alive, and can longer catch the disease.
+    * For each person that started this round as infected, generate a random number between 0 and 1.  If that number is greater than `(1 - mortality rate)`, then that person has been killed by the disease. They should be marked as dead. Otherwise, they stay alive, and can longer catch the disease 
     
-    * All people that were infected this round move from `newly_infected` to `is_infected`. 
+    * All people that were infected in this round move from `newly_infected` to `is_infected` 
     
 Begin by breaking up most of this logic into helper functions, so that your main functions will be simple.  
     
-#### `infected_interaction()` Function
+#### `infected_interaction()` function
 
-Write a function called `infected_interaction` that will be called for every infected person in the population in a given time step.  This function handles all the possible cases that can happen with the following logic:
+Write a function called `infected_interaction()` that will be called for every infected person in the population in a given time step. This function handles all the possible cases that can happen with the following logic:
 
-* Initialize a counter called `num_interactions` to `0`.
-* Select a random person from `self.population`.
-* Check if the person is alive. If the person is dead, we will not count this as an interaction.
-* If the random person is alive and not vaccinated, generate a random number between 0 and 1.  If the random number is greater than `(1 - self.r0)`, change the random person's `newly_infected` attribute to `True`.
-* Increment `num_interactions` by 1.  Do not increment any of the infected counters in the simulation class--you'll have another method deal with those.
+* Initialize a counter called `num_interactions` to 0 
+* Select a random person from `self.population` 
+* Check if the person is alive. If the person is dead, we will not count this as an interaction 
+* If the random person is alive and not vaccinated, generate a random number between 0 and 1.  If the random number is greater than `(1 - self.r0)`, change the random person's `newly_infected` attribute to `True` 
+* Increment `num_interactions` by 1. Do not increment any of the infected counters in the simulation class -- you'll have another method deal with those 
 
 Complete the `infected_interaction()` method in the cell below.  Comments have been provided to help you write it.
 
-**_HINT_**: To randomly select an item from a list, use `np.random.choice()`!
+**_HINT_**: To randomly select an item from a list, use `np.random.choice()`. 
 
 
 ```python
@@ -383,28 +382,28 @@ def infected_interaction(self, infected_person):
 Simulation.infected_interaction = infected_interaction
 ```
 
-#### `_resolve_states()` Function
+#### `_resolve_states()` function
 
-The 2nd helper function you'll use during each time step is one that resolves any temporary states.  Recall that people do not stay newly infected or infected for more than a turn.  That means you need a function to figure out what happens to these people at the end of each turn, so that everything is ready to go for the next time step. 
+The second helper function you'll use during each time step is one that resolves any temporary states. Recall that people do not stay newly infected or infected for more than a turn. That means you need a function to figure out what happens to these people at the end of each turn, so that everything is ready to go for the next time step. 
 
 This function will:
 
-* Iterate through every person in the population.
+* Iterate through every person in the population 
 * Check if the person is alive (since we don't need to bother checking anything for the dead ones)
-* If the person is infected, we need to resolve whether they survive the infection or die from it.  
-    * Generate a random number between 0 and 1.  
-    * If this number is greater than `(1 - self.mortality_rate)`, the person has died.  
-        * Set the person's `.is_alive` and `.is_infected` attributes both to `False`.  
-        * Increment the simulation's `self.dead_counter` attribute by 1.
-        * Decrement the simulation's `self.current_infected_counter` attribute by 1.
-    * Else, the person has survived the infection and is now immune to future infections.
+* If the person is infected, we need to resolve whether they survive the infection or die from it:   
+    * Generate a random number between 0 and 1   
+    * If this number is greater than `(1 - self.mortality_rate)`, the person has died   
+        * Set the person's `.is_alive` and `.is_infected` attributes both to `False`   
+        * Increment the simulation's `self.dead_counter` attribute by 1 
+        * Decrement the simulation's `self.current_infected_counter` attribute by 1 
+    * Else, the person has survived the infection and is now immune to future infections 
         * Set the person's `is_infected` attribute to `False`
         * Set the person's `has_been_infected` attribute to `True`
-        * Decrement the simulation's `self.current_infected_counter` by 1.
+        * Decrement the simulation's `self.current_infected_counter` by 1 
 * If the person is newly infected:
     * Set the person's `newly_infected` attribute to `False`
     * Set the person's `is_infected` attribute to `True`
-    * Increment `total_infected_counter` and `current_infected_counter` by 1.
+    * Increment `total_infected_counter` and `current_infected_counter` by 1 
     
 
 Complete the function `_resolve_states()` in the cell below.  Comments have been provided to help you write it. 
@@ -512,17 +511,17 @@ def _resolve_states(self):
 Simulation._resolve_states = _resolve_states
 ```
 
-#### `_time_step()` Function
+#### `_time_step()` function
 
-Now that you have two helper methods to do most of the heavy lifting, the `_time_step()` function will be pretty simple.  
+Now that you have two helper functions to do most of the heavy lifting, the `_time_step()` function will be pretty simple.  
 
 This function should:
 
 * Iterate through each person in the population
 * If the person is alive and infected, call `self.infected_interaction()` and pass in this infected person
-* Once we have looped through every person, call `self._resolve_states()` to resolve all outstanding states and prepare for the next round.  
-* Log the statistics from this round by calling `self._log_time_step_statistics()`.  This function has been provided for you further down the notebook. 
-* Increment `self.current_time_step`.
+* Once we have looped through every person, call `self._resolve_states()` to resolve all outstanding states and prepare for the next round   
+* Log the statistics from this round by calling `self._log_time_step_statistics()`.  This function has been provided for you further down the notebook  
+* Increment `self.current_time_step` 
 
 
 ```python
@@ -585,9 +584,9 @@ def _time_step(self):
 Simulation._time_step = _time_step
 ```
 
-Finally, you just need to write a function that logs the results of each time step by storing it in a DataFrame, and then writes the end result of the Simulation to a csv file.
+Finally, you just need to write a function that logs the results of each time step by storing it in a DataFrame, and then writes the end result of the simulation to a csv file.
 
-In the interest of time, this function has been provided for you.  You do not need to write any code in the cell below--just run the cell.
+In the interest of time, this function has been provided for you.  You do not need to write any code in the cell below -- just run the cell.
 
 
 ```python
@@ -650,14 +649,14 @@ Simulation._log_time_step_statistics = _log_time_step_statistics
 
 #### Wrapping It All Up With `run()`
 
-This is the function that you (or your hypothetical user) will actually interact with. It will act as the "main" function.  Since you've done a great job of writing very clean, modular helper functions, you should find that this function is the simplest one in the entire program. 
+This is the function that you (or your hypothetical user) will actually interact with. It will act as the "main" function. Since you've done a great job of writing very clean, modular helper functions, you should find that this function is the simplest one in the entire program. 
 
 This function should:
 
-* Start a for loop that runs `self.total_time_steps` number of times.  In order to demonstrate how to easily add a progress bar to iterables with the `tqdm` library, this line has been added for you. 
-* Display a message telling the user the time step that it is currently working on. 
+* Start a for loop that runs `self.total_time_steps` number of times.  In order to demonstrate how to easily add a progress bar to iterables with the `tqdm` library, this line has been added for you  
+* Display a message telling the user the time step that it is currently working on  
 * Call `self._time_step()`
-* Once the simulation has finished, write the DataFrame containing the summary statistics from each step to a csv file.  This line of code has also been provided for you. 
+* Once the simulation has finished, write the DataFrame containing the summary statistics from each step to a csv file. This line of code has also been provided for you  
 
 In the cell below, complete the `run()` function.  Comments have been added to help you write it. 
 
@@ -706,17 +705,17 @@ Simulation.run = run
 
 ### Running Our Simulation
 
-Now comes the fun part--actually running your simulation!
+Now comes the fun part -- actually running your simulation!
 
 In the cell below, create a simulation with the following parameters:
 
-* Population size of `2000`
-* Disease name is `Ebola`
-* r0 value of `2`
-* Mortality rate of `0.5`
-* `20` time steps
-* Vaccination Rate of `0.85`
-* `50` initial infected
+* Population size of 2000
+* Disease name is `'Ebola'`
+* `r0` value of 2
+* Mortality rate of 0.5
+* 20 time steps
+* Vaccination rate of 0.85
+* 50 initial infected
 
 
 ```python
@@ -1027,12 +1026,12 @@ If you didn't change the random seed, your results should look like this:
 
 <img src='images/example_sim_results.png'>
 
-As you can see from the table above, even though the average person with Ebola will infect 2 other people, herd immunity protects the majority of the unvaccinated people in the population.  Although there were approximately 400 people in the population that were susceptible to Ebola, only 67 were actually infected before the virus burned itself out!
+As you can see from the table above, even though the average person with Ebola will infect two other people, herd immunity protects the majority of the unvaccinated people in the population.  Although there were approximately 400 people in the population that were susceptible to Ebola, only 67 were actually infected before the virus burned itself out!
 
 ## Extra Practice
 
-Try different values for the `pct_vaccinated` argument, and see how it changes the results of the model.  These would look great as a visualization--consider comparing them all on the same line graph!
+Try different values for the `pct_vaccinated()` argument, and see how it changes the results of the model. These would look great as a visualization -- consider comparing them all on the same line graph!
 
 ## Summary
 
-Great job! You've just written a simulation to demonstrate the effects of herd immunity in action. Specifically, in this lab, you demonstrated mastery of using inheritance to write nonredundant code, creating methods that calculate statistics of the attributes of an object, and creating Object-Oriented data models that describe the real world with multiple classes and subclasses and interaction between classes!
+Great job! You've just written a simulation to demonstrate the effects of herd immunity in action. Specifically, in this lab, you demonstrated mastery of using inheritance to write nonredundant code, creating methods that calculate statistics of the attributes of an object, and creating object-oriented data models that describe the real world with multiple classes and subclasses and interaction between classes!
