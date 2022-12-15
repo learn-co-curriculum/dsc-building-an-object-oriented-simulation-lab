@@ -1,4 +1,3 @@
-
 # Building An Object-Oriented Simulation - Lab
 
 ## Introduction
@@ -25,7 +24,7 @@ Run the cell below to do this now.
 ```python
 import numpy as np
 import pandas as pd
-from tqdm.autonotebook import tqdm
+from tqdm import tqdm
 np.random.seed(0)
 ```
 
@@ -139,7 +138,7 @@ class Simulation(object):
             # Then, append new_person to self.population
             else:
                 
-            self.population.append(None)
+                self.population.append(None)
        
         print("-" * 50)
         print("Simulation Initiated!")
