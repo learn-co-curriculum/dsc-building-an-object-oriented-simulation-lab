@@ -1,4 +1,3 @@
-
 # Building An Object-Oriented Simulation - Lab
 
 ## Introduction
@@ -25,7 +24,7 @@ Run the cell below to do this now.
 ```python
 import numpy as np
 import pandas as pd
-from tqdm.autonotebook import tqdm
+from tqdm import tqdm
 np.random.seed(0)
 ```
 
@@ -34,13 +33,9 @@ np.random.seed(0)
 # __SOLUTION__ 
 import numpy as np
 import pandas as pd 
-from tqdm.autonotebook import tqdm
+from tqdm import tqdm
 np.random.seed(0)
 ```
-
-    C:\Users\medio\AppData\Local\Continuum\anaconda3\lib\site-packages\tqdm\autonotebook\__init__.py:14: TqdmExperimentalWarning: Using `tqdm.autonotebook.tqdm` in notebook mode. Use `tqdm.tqdm` instead to force console mode (e.g. in jupyter console)
-      " (e.g. in jupyter console)", TqdmExperimentalWarning)
-
 
 ## The Assumptions of Our Model
 
@@ -169,7 +164,7 @@ class Simulation(object):
             # Then, append new_person to self.population
             else:
                 
-            self.population.append(None)
+                self.population.append(None)
        
         print("-" * 50)
         print("Simulation Initiated!")
@@ -763,13 +758,19 @@ sim = Simulation(2000, "Ebola", 2, 0.5, 20, .85, 50)
 sim.run()
 ```
 
-
-    HBox(children=(IntProgress(value=0, max=20), HTML(value='')))
-
+      0%|          | 0/20 [00:00<?, ?it/s]
 
     Beginning Time Step 0
+
+
+     15%|█▌        | 3/20 [00:12<01:28,  5.20s/it]
+
     Beginning Time Step 1
     Beginning Time Step 2
+
+
+    100%|██████████| 20/20 [00:12<00:00,  1.61it/s]
+
     Beginning Time Step 3
     Beginning Time Step 4
     Beginning Time Step 5
@@ -787,6 +788,8 @@ sim.run()
     Beginning Time Step 17
     Beginning Time Step 18
     Beginning Time Step 19
+
+
     
 
 
